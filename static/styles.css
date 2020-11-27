@@ -1,4 +1,94 @@
 body {
 	background: black;
 	color: white;
+	font-family: Arial, Helvetica, sans-serif;
+	overflow: hidden;
+}
+
+h1, h2 {
+	margin: 0;
+}
+
+.main-screen {
+	width: 100%;
+	height: 98vh;
+	position: relative; 
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.arrow-left, .arrow-right, .arrow-up, .arrow-down {
+	position: absolute;
+	border-radius: 10px;
+}
+
+.arrow-left {
+	left: 0;
+	padding: 200px 10px;
+}
+
+.arrow-right {
+	right: 0;
+	padding: 200px 10px;
+}
+
+.arrow-up {
+	top: 0;
+	padding: 2px 325px;
+}
+
+.arrow-down {
+	bottom: 0;
+	padding: 2px 325px;
+}
+
+.arrow-left:hover, .arrow-right:hover, .arrow-up:hover, .arrow-down:hover {
+	background-color: lightblue;
+}
+
+.time-date {
+	text-align: center;
+}
+
+.time-class {
+	font-size: 275px;
+	margin-bottom: -50px; 
+}
+
+.date-class {
+	font-size: 55px;
+	margin-bottom: 25px; 
+}
+
+.weather {
+	display: flex;
+	align-items: center;
+	margin-bottom: 50px;
+	/*border: red solid 2px;*/
+}
+
+.weather-icon img {
+	width: 75px;
+}
+
+.alarm-screen {
+	width: 100%;
+	height: 98vh;
+	position: relative; 
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.music-screen {
+	width: 100%;
+	height: 98vh;
+	position: relative; 
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
