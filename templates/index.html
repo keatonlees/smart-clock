@@ -3,10 +3,146 @@
 	<head>
 		<title>Keaton Lees</title>
 		<link rel="stylesheet" href="../static/styles.css/">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	
 	<body>
-		<h1>{{ title }}</h1>
-		<h2>The data and time on the server is: {{ time }}</h2>
+		<div id="main-screen" class="main-screen">
+			<div class="arrow-left" onclick="go_alarm()">
+				<i class="fa fa-caret-left fa-2x"></i>
+			</div>
+			<div class="arrow-right" onclick="go_music()">
+				<i class="fa fa-caret-right fa-2x"></i>
+			</div>
+			<div class="arrow-up">
+				<i class="fa fa-caret-up fa-2x"></i>
+			</div>
+			<div class="arrow-down">
+				<i class="fa fa-caret-down fa-2x"></i>
+			</div>
+			
+			<div class="time-date">
+				<h1 class="time-class" id="display_time">TIME</h1>  
+				<h1 class="date-class" id="display_date">DATE</h1>
+			</div>
+			
+			<div class="weather">
+				<div>
+					<div class="weather-icon" id="display_icon"></div>
+				</div>
+				<div>
+					<h2 id="display_location">LOCATION</h2>
+					<h2 id="display_temperature">TEMPERATURE</h2>
+					<h2 id="display_description">DESCRIPTION</h2>
+				</div>
+			</div>
+		</div>
+		
+		<div id="alarm-screen" class="alarm-screen">
+			<div class="arrow-right" onclick="go_home()">
+				<i class="fa fa-caret-right fa-2x"></i>
+			</div>
+			
+			<div class="">
+				<h1 class="">ALARM</h1>  
+			</div>
+		</div>
+		
+		<div id="music-screen" class="music-screen">
+			<div class="arrow-left" onclick="go_home()">
+				<i class="fa fa-caret-left fa-2x"></i>
+			</div>
+			
+			<div class="">
+				<h1 class="">MUSIC</h1>  
+			</div>
+		</div>
 	</body>
+	<script>
+	   window.onload = function() {
+		   update_time();
+		   update_date();
+		   update_weather();
+		   
+		   fade_out();
+		   go_home();
+	   };
+	   
+	   // hide everything
+	   function fade_out() {
+		   $("#main-screen").fadeOut();
+		   $("#alarm-screen").fadeOut();
+		   $("#music-screen").fadeOut();
+	   }
+	   
+	   // show main screen
+	   function go_home() {
+		   fade_out();
+		   $("#main-screen").fadeIn();
+	   }
+	   
+	   // show alarm screen
+	   function go_alarm() {
+		   fade_out();
+		   $("#alarm-screen").fadeIn();
+	   }
+	   
+	   // show music screen
+	   function go_music() {
+		   fade_out();
+		   $("#music-screen").fadeIn();
+	   }
+	   
+	   // update time
+	   function update_time(){$.ajax({
+		   url: '/_update_time',
+           type: 'POST',
+           success: function(response) {
+			   console.log(response);
+			   time_str = response["time"];
+               $("#display_time").html(time_str);
+               
+               // update date every 12 hours
+               if (time_str == "12:00" || time_str == "12:00:00") {
+				   update_date();
+			   }
+           },
+           error: function(error) {
+			   console.log(error);
+           }
+       })};
+       setInterval('update_time()', 1000);  // every 1 second
+       
+       // update date
+	   function update_date(){$.ajax({
+		   url: '/_update_date',
+           type: 'POST',
+           success: function(response) {
+			   console.log(response);
+               $("#display_date").html(response["date"]);
+           },
+           error: function(error) {
+			   console.log(error);
+           }
+       })};
+       
+       // update weather
+	   function update_weather(){$.ajax({
+		   url: '/_update_weather',
+           type: 'POST',
+           success: function(response) {
+			   console.log(response);
+               $("#display_location").html(response["location"]);
+               $("#display_temperature").html(response["temperature"] + " °C");
+               $("#display_description").html(response["description"]);
+               $("#display_icon").html('<img src="http://openweathermap.org/img/w/' + response["icon"] + '.png" />');
+           },
+           error: function(error) {
+			   console.log(error);
+           }
+       })};
+       setInterval('update_weather()', 60000*10);  // every 10 minutes
+       
+	</script>
 </html>
