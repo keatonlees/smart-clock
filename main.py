@@ -21,6 +21,13 @@ def update_date():
         'date': datetime.datetime.now().strftime("%A, %B %d")
     })
 
+@app.route('/_get_alarm', methods=['POST'])
+def get_day():
+    return jsonify({
+        'time': datetime.datetime.now().strftime("%H:%M:%S"),
+        'day': datetime.datetime.now().strftime("%A")
+    })
+
 @app.route('/_update_weather', methods=['POST'])
 def update_weather():
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=bd44a2b2a80b02693d0e10ee79e6ecdb'
