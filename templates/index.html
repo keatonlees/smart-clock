@@ -8,58 +8,42 @@
 	</head>
 	
 	<body>
-		<div id="main-screen" class="main-screen">
-			<div class="arrow-left" onclick="go_alarm()">
-				<i class="fa fa-caret-left fa-2x"></i>
-			</div>
-			<div class="arrow-right" onclick="go_music()">
-				<i class="fa fa-caret-right fa-2x"></i>
-			</div>
-			<div class="arrow-up">
-				<i class="fa fa-caret-up fa-2x"></i>
-			</div>
-			<div class="arrow-down">
-				<i class="fa fa-caret-down fa-2x"></i>
-			</div>
-			
-			<div class="time-date">
-				<h1 class="time-class" id="display_time">TIME</h1>  
-				<h1 class="date-class" id="display_date">DATE</h1>
-			</div>
-			
-			<div class="weather">
-				<div>
-					<div class="weather-icon" id="display_icon"></div>
+		<div class="container">
+			<div id="home-screen" class="home-screen">
+				<div> <!-- Navigation Arrows -->
+					<i id="nav-arrow-left" class="fa fa-caret-left fa-3x"></i>
+					<i id="nav-arrow-right" class="fa fa-caret-right fa-3x"></i>
+					<i id="nav-arrow-up" class="fa fa-caret-up fa-3x"></i>
+					<i id="nav-arrow-down" class="fa fa-caret-down fa-3x"></i>
 				</div>
-				<div>
-					<h2 id="display_location">LOCATION</h2>
-					<h2 id="display_temperature">TEMPERATURE</h2>
-					<h2 id="display_description">DESCRIPTION</h2>
+
+				<div class="home-content"> <!-- Content -->
+					<div class="time-content">
+						<h1 class="time-class" id="display_time">TIME</h1>
+						<h1 class="date-class" id="display_date">DATE</h1>
+					</div>
+					
+					<div class="weather-content">
+						<div class="weather-icon" id="display_icon"></div>
+						<h1 class="temp-class" id="display_temperature">TEMPERATURE</h1>
+						<div class="weather-info">
+							<h1 class="location-class" id="display_location">LOCATION</h1>
+							<h1 class="description-class" id="display_description">DESCRIPTION</h1>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div id="alarm-screen" class="alarm-screen">
-			<div class="arrow-right" onclick="go_home()">
-				<i class="fa fa-caret-right fa-2x"></i>
+			
+			<div id="left-screen" class="left-screen">
+			
 			</div>
 			
-			<div class="">
-				<h1 class="">ALARM</h1>  
-			</div>
-		</div>
-		
-		<div id="music-screen" class="music-screen">
-			<div class="arrow-left" onclick="go_home()">
-				<i class="fa fa-caret-left fa-2x"></i>
-			</div>
+			<div id="right-screen" class="right-screen">
 			
-			<div class="">
-				<h1 class="">MUSIC</h1>  
 			</div>
 		</div>
 	</body>
-	<script>
+	<script>	   
 	   window.onload = function() {
 		   update_time();
 		   update_date();
@@ -107,6 +91,9 @@
                if (time_str == "12:00" || time_str == "12:00:00") {
 				   update_date();
 			   }
+			   
+			   // check alarm
+			   // get_alarm();
            },
            error: function(error) {
 			   console.log(error);
@@ -127,6 +114,27 @@
            }
        })};
        
+       // alarm
+       function get_alarm(){$.ajax({
+		   url: '/_get_alarm',
+           type: 'POST',
+           success: function(response) {
+			   console.log(response);
+               if (response["day"] == "Saturday" || response["day"] == "Sunday") {
+				   if (response["time"] == "08:00:00") {
+						console.log("Weekend alarm");
+				   }
+			   } else {
+				   if (response["time"] == "06:00:00") {
+						console.log("Weekday alarm");
+				   }
+			   }
+           },
+           error: function(error) {
+			   console.log(error);
+           }
+       })};
+       
        // update weather
 	   function update_weather(){$.ajax({
 		   url: '/_update_weather',
@@ -134,7 +142,7 @@
            success: function(response) {
 			   console.log(response);
                $("#display_location").html(response["location"]);
-               $("#display_temperature").html(response["temperature"] + " °C");
+               $("#display_temperature").html(response["temperature"] + "°C");
                $("#display_description").html(response["description"]);
                $("#display_icon").html('<img src="http://openweathermap.org/img/w/' + response["icon"] + '.png" />');
            },
@@ -143,6 +151,5 @@
            }
        })};
        setInterval('update_weather()', 60000*10);  // every 10 minutes
-       
 	</script>
 </html>
